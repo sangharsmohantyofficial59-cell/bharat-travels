@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+  --font-display: "Space Grotesk", sans-serif;
+  
+  --color-gold-50: #fdfaf2;
+  --color-gold-100: #fbf5e6;
+  --color-gold-200: #f7e099;
+  --color-gold-300: #f2cc5c;
+  --color-gold-400: #eeb81f;
+  --color-gold-500: #d4af37;
+  --color-gold-600: #bfa032;
+  --color-gold-700: #a68b2c;
+  --color-gold-800: #8c7625;
+  --color-gold-900: #73611f;
+  --color-gold-950: #493306;
+  
+  --color-navy-50: #f4f6fa;
+  --color-navy-100: #e8ecf4;
+  --color-navy-200: #c9d5e6;
+  --color-navy-300: #9cb4d2;
+  --color-navy-400: #688ebb;
+  --color-navy-500: #0a2540;
+  --color-navy-600: #081d33;
+  --color-navy-700: #061626;
+  --color-navy-800: #040e1a;
+  --color-navy-900: #02070d;
+
+  --color-saffron-50: #fff7ed;
+  --color-saffron-100: #ffedd5;
+  --color-saffron-200: #fed7aa;
+  --color-saffron-300: #fdbb74;
+  --color-saffron-400: #fb923c;
+  --color-saffron-500: #ea580c;
+  --color-saffron-600: #ea580c;
+  --color-saffron-700: #c2410c;
+  --color-saffron-800: #9a3412;
+  --color-saffron-900: #7c2d12;
+  
+  --color-brand-blue: #0a2540;
+  --color-brand-saffron: #f47216;
+  
+  --color-bronze-500: #af7a43;
+  --color-bronze-600: #936030;
+  
+  --color-luxury-black: #0c0d10;
+  --color-luxury-charcoal: #14161a;
+  --color-luxury-card: #1c1e24;
+}
+
+@layer utilities {
+  /* Premium Gold Text Gradient */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #0a2540 0%, #ea580c 40%, #d4af37 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Linear Gold Border */
+  .border-gold-gradient {
+    border-image: linear-gradient(135deg, #d4af37, #ea580c) 1;
+  }
+
+  /* Smooth high-end glassmorphism - Light Mode Optimized */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(10, 37, 64, 0.08);
+    box-shadow: 0 10px 30px -10px rgba(10, 37, 64, 0.08);
+  }
+
+  .glass-panel-light {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(10, 37, 64, 0.04);
+  }
+
+  .glass-panel-gold {
+    background: rgba(212, 175, 55, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+  }
+
+  /* Glow effects offset in light mode */
+  .glow-gold {
+    box-shadow: 0 4px 20px rgba(234, 88, 12, 0.08);
+  }
+
+  .glow-gold-lg {
+    box-shadow: 0 10px 40px rgba(10, 37, 64, 0.12);
+  }
+
+  /* Custom animated scrollbars for Light Mode */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f4f6fa;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #c9d5e6;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ea580c;
+  }
+}
+
+/* Base resets & styles */
+body {
+  background-color: #ffffff;
+  color: #1e293b;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+}

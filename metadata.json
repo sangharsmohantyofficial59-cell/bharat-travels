@@ -1,0 +1,6 @@
+{
+  "name": "Bharat Travels Hospitality Platform",
+  "description": "A premium, next-generation travel and hospitality marketplace connecting hotels, resorts, transport, and experiences across India with glassmorphic visuals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
