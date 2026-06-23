@@ -9,14 +9,12 @@ interface KirteePropertyPageProps {
   onBookNow: (property: Property) => void;
   onBackToMarketplace: () => void;
   kirteeProperty: Property;
-  onTriggerGdsRedirect: (propertyName: string) => void;
 }
 
 export default function KirteePropertyPage({ 
   onBookNow, 
   onBackToMarketplace, 
-  kirteeProperty,
-  onTriggerGdsRedirect
+  kirteeProperty
 }: KirteePropertyPageProps) {
   
   const [activeGalleryIdx, setActiveGalleryIdx] = useState(0);
@@ -174,7 +172,9 @@ export default function KirteePropertyPage({
         
         <div className="flex items-center gap-3">
           <button 
-            onClick={() => onTriggerGdsRedirect('KIRTEE Eco Resort & Convention')}
+            onClick={() => {
+              alert('PMS Console access is disabled on the public Bharat Travels marketplace homepage.');
+            }}
             className="bg-emerald-600 hover:bg-emerald-500 text-white font-mono text-[10px] sm:text-xs font-bold uppercase px-4 py-1.5 rounded-lg tracking-wider transition-all cursor-pointer shadow-lg flex items-center gap-1.5"
           >
             Open PMS Console

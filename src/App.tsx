@@ -11,7 +11,6 @@ import BookingPortal from './components/BookingPortal';
 import PartnerDashboard from './components/PartnerDashboard';
 import PropertyDetailsModal from './components/PropertyDetailsModal';
 import KirteePropertyPage from './components/KirteePropertyPage';
-import GdsRedirectLoader from './components/GdsRedirectLoader';
 import TransportBookingPortal from './components/TransportBookingPortal';
 import TransportDashboard from './components/TransportDashboard';
 import { DESTINATIONS, HOTELS, RESORTS, EXPERIENCES, VEHICLES, TESTIMONIALS } from './data';
@@ -87,26 +86,7 @@ export default function App() {
     return 'marketplace';
   });
 
-  const [gdsRedirectState, setGdsRedirectState] = useState<{
-  isRedirecting: boolean;
-  propertyName: string;
-  targetUrl: string;
-} | null>(null);
 
-// Helper trigger for premium loading redirect
-const triggerGdsRedirect = (propertyName: string) => {
-  localStorage.setItem('bharat_travels_selected_property', propertyName);
-  const targetUrl = "https://ais-pre-pz53nhau76qrsxicbwhilx-1046839605750.asia-southeast1.run.app/";
-  
-  // Open the link in a new tab to bypass the preview iframe block
-  window.open(targetUrl, '_blank', 'noopener,noreferrer');
-};
-// Listen for state changes and execute the redirect
-useEffect(() => {
-  if (gdsRedirectState?.isRedirecting && gdsRedirectState.targetUrl) {
-    window.location.href = gdsRedirectState.targetUrl;
-  }
-}, [gdsRedirectState]);
   
   // Bookings state
   const [activeBookings, setActiveBookings] = useState<Booking[]>(() => {
@@ -129,7 +109,7 @@ useEffect(() => {
   });
 
   const toggleWishlist = (id: string) => {
-    setWishlistState(prev => {
+    setWishlistState((prev: Record<string, boolean>) => {
       const updated = { ...prev, [id]: !prev[id] };
       localStorage.setItem('bharat_travels_wishlist', JSON.stringify(updated));
       return updated;
@@ -213,7 +193,7 @@ useEffect(() => {
 
   // Dynamic booking status update handler (for Transport operations console)
   const handleUpdateBookingFields = (id: string, updatedFields: Partial<Booking>) => {
-    setActiveBookings(prev => prev.map(b => b.id === id ? { ...b, ...updatedFields } : b));
+    setActiveBookings((prev: Booking[]) => prev.map((b: Booking) => b.id === id ? { ...b, ...updatedFields } : b));
   };
 
   // My Bookings Dashboard Modal
@@ -273,7 +253,7 @@ useEffect(() => {
   };
 
   const handleAddBooking = (newBooking: Booking) => {
-    setActiveBookings(prev => [newBooking, ...prev]);
+    setActiveBookings((prev: Booking[]) => [newBooking, ...prev]);
     setActiveJourneyStep(6);
     setTimeout(() => {
       setIsBookingOpen(false);
@@ -290,7 +270,9 @@ useEffect(() => {
   // Triggers booking portal for hotels or resorts
   const triggerPropertyBookingForm = (property: Property) => {
     setIsDetailsOpen(false);
-    triggerGdsRedirect(property.name);
+    // Redirects to external GDS pages removed. Keep user inside Bharat Travels.
+    setSelectedProp(property);
+    setIsDetailsOpen(true);
   };
 
   // Triggers booking portal for transport
@@ -302,18 +284,20 @@ useEffect(() => {
 
   // Opens property details modal
   const openPropertyDetails = (property: Property) => {
-    triggerGdsRedirect(property.name);
+    // Redirects to external GDS pages removed. Keep user inside Bharat Travels.
+    setSelectedProp(property);
+    setIsDetailsOpen(true);
   };
 
   // Adds property locally via partner onboarding form list
   const handleAddNewOnboardedProperty = (newProperty: Property) => {
-    setLocalProperties(prev => [newProperty, ...prev]);
+    setLocalProperties((prev: Property[]) => [newProperty, ...prev]);
     if (newProperty.category === 'resort') {
-      setFilteredResorts(prev => [newProperty, ...prev]);
+      setFilteredResorts((prev: Property[]) => [newProperty, ...prev]);
     } else {
-      setFilteredHotels(prev => [newProperty, ...prev]);
+      setFilteredHotels((prev: Property[]) => [newProperty, ...prev]);
     }
-    setStats(prev => ({ ...prev, properties: prev.properties + 1 }));
+    setStats((prev: typeof stats) => ({ ...prev, properties: prev.properties + 1 }));
   };
 
   const handlePartnerSubmit = (e: React.FormEvent) => {
@@ -322,7 +306,7 @@ useEffect(() => {
   };
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-800 relative selection:bg-saffron-500 selection:text-white overflow-x-hidden">
+      <div className="min-h-screen bg-white font-sans text-slate-800 relative selection:bg-saffron-500 selection:text-white overflow-x-hidden">
       
       {/* Absolute Ambient Background Lights */}
       <div className="absolute top-0 left-1/4 -translate-y-1/2 w-[800px] h-[400px] bg-saffron-100/30 rounded-full blur-[150px] pointer-events-none" />
@@ -1155,9 +1139,7 @@ useEffect(() => {
                           <div className="flex flex-wrap gap-2.5 w-full md:w-auto">
                             {isKirtee ? (
                               <button
-                                onClick={() => {
-                                  triggerGdsRedirect(property.name);
-                                }}
+                                onClick={() => openPropertyDetails(property)}
                                 className="flex-1 md:flex-none hover:bg-emerald-50 border border-emerald-605 text-emerald-850 font-bold text-xs tracking-widest uppercase px-6 py-3.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1 font-sans"
                               >
                                 <Eye className="w-4 h-4 text-emerald-700" />
@@ -1165,9 +1147,7 @@ useEffect(() => {
                               </button>
                             ) : (
                               <button
-                                onClick={() => {
-                                  triggerGdsRedirect(property.name);
-                                }}
+                                onClick={() => openPropertyDetails(property)}
                                 className="flex-1 md:flex-none hover:bg-saffron-50 border border-saffron-600 text-[#bb5a06] font-bold text-xs tracking-widest uppercase px-6 py-3.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1 font-sans"
                               >
                                 <Eye className="w-4 h-4 text-saffron-600" />
@@ -1176,9 +1156,7 @@ useEffect(() => {
                             )}
 
                             <button
-                              onClick={() => {
-                                triggerGdsRedirect(property.name);
-                              }}
+                              onClick={() => triggerPropertyBookingForm(property)}
                               className={`flex-1 md:flex-none font-bold text-xs tracking-widest uppercase px-6 py-3.5 rounded-xl shadow-md transition-all hover:scale-[1.02] duration-300 flex items-center justify-center gap-2 cursor-pointer text-white font-sans ${
                                 isKirtee ? 'bg-emerald-700 hover:bg-emerald-650' : 'bg-saffron-500 hover:bg-saffron-600'
                               }`}
@@ -1447,10 +1425,10 @@ useEffect(() => {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-transparent to-transparent opacity-95" />
                   
                   {/* Top floats */}
-                  <div className="absolute top-3 left-3 right-3 flex justify-between items-center">
-                    <span className="text-[9px] bg-saffron-50 text-saffron-700 border border-saffron-200 px-2 py-0.5 rounded font-mono uppercase font-bold tracking-wider">
-                      {resort.category.toUpperCase()}
-                    </span>
+                          <div className="absolute top-3 left-3 right-3 flex justify-between items-center">
+                            <span className="text-[9px] bg-saffron-50 text-saffron-700 border border-saffron-200 px-2 py-0.5 rounded font-mono uppercase font-bold tracking-wider">
+                              {resort.category.toUpperCase()}
+                            </span>
                     <div className="flex items-center gap-1 bg-slate-900/90 text-gold-300 px-2.5 py-0.5 rounded-lg border border-slate-800 font-mono text-[10px] font-bold">
                       <Star className="w-3 h-3 fill-gold-400 text-gold-400" />
                       <span>{resort.rating}</span>
@@ -1484,7 +1462,7 @@ useEffect(() => {
                   {/* CTA button */}
                   <div className="pt-4 mt-5 border-t border-slate-100">
                     <button
-                      onClick={() => triggerGdsRedirect(resort.name)}
+                      onClick={() => openPropertyDetails(resort)}
                       className="w-full bg-navy-500 hover:bg-navy-600 text-white font-bold text-xs py-2.5 rounded-xl uppercase tracking-widest transition-all text-center cursor-pointer"
                     >
                       View Property
@@ -2003,7 +1981,6 @@ useEffect(() => {
             setCurrentPropertyName('Niladri Shore Resort');
           }}
           kirteeProperty={localProperties.find(p => p.id === 'resort-kirtee') || localProperties[localProperties.length - 1]}
-          onTriggerGdsRedirect={triggerGdsRedirect}
         />
       )}
 
@@ -2121,16 +2098,7 @@ useEffect(() => {
         </div>
       )}
 
-      {/* Premium GDS Handshake Redirect Launcher */}
-      {gdsRedirectState && gdsRedirectState.isRedirecting && (
-        <GdsRedirectLoader 
-          propertyName={gdsRedirectState.propertyName}
-          targetUrl={gdsRedirectState.targetUrl}
-          onComplete={() => {
-            window.location.href = gdsRedirectState.targetUrl;
-          }}
-        />
-      )}
+
 
       {/* STAFF OPERATIONS PORTAL */}
       {activePropertyPageView === 'marketplace' && workspace === 'staff' && (
